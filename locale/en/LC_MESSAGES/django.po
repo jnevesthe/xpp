@@ -1,0 +1,163 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: XPPP 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-09 01:04+0000\n"
+"PO-Revision-Date: 2026-02-17 00:30+0000\n"
+"Last-Translator: Your Name <youremail@example.com>\n"
+"Language-Team: English <en@example.com>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: video/templates/404.html:8
+msgid "Página não encontrada"
+msgstr "Page not found"
+
+#: video/templates/404.html:36
+msgid "Página não encontrada!"
+msgstr "Page not found!"
+
+#: video/templates/404.html:37
+msgid "Ops! A página que você procura não existe."
+msgstr "Oops! The page you are looking for does not exist."
+
+#: video/templates/404.html:38
+msgid "Voltar para o início"
+msgstr "Back to home"
+
+#: video/templates/categorias.html:9
+msgid "Categorias | XPPP"
+msgstr "Categories | XPPP"
+
+#: video/templates/categorias.html:121 video/templates/galeria.html:177
+msgid "Categorias"
+msgstr "Categories"
+
+#: video/templates/categorias.html:125 video/templates/destaques.html:125
+#: video/templates/galeria.html:182 video/templates/ver_video.html:145
+#: video/templates/videos_categoria.html:134
+msgid "Pesquisar vídeos..."
+msgstr "Search videos..."
+
+#: video/templates/categorias.html:142
+msgid "Nenhuma categoria cadastrada."
+msgstr "No categories registered."
+
+#: video/templates/categorias.html:148
+msgid "🏠 Home"
+msgstr "🏠 Home"
+
+#: video/templates/categorias.html:149
+msgid "⭐ Destaques"
+msgstr "⭐ Highlights"
+
+#: video/templates/destaques.html:9
+msgid "Destaques - XPPP"
+msgstr "Highlights - XPPP"
+
+#: video/templates/destaques.html:121
+msgid "Vídeos em Destaque"
+msgstr "Featured Videos"
+
+#: video/templates/destaques.html:144 video/templates/galeria.html:227
+#: video/templates/search_results.html:58
+#: video/templates/videos_categoria.html:159
+msgid "Anterior"
+msgstr "Previous"
+
+#: video/templates/destaques.html:147
+#, python-format
+msgid "Página %(page_obj.number)s de %(page_obj.paginator.num_pages)s"
+msgstr "Page %(page_obj.number)s of %(page_obj.paginator.num_pages)s"
+
+#: video/templates/destaques.html:150 video/templates/galeria.html:239
+#: video/templates/search_results.html:72
+#: video/templates/videos_categoria.html:165
+msgid "Próximo"
+msgstr "Next"
+
+#: video/templates/destaques.html:155 video/templates/galeria.html:178
+#: video/templates/galeria.html:246 video/templates/ver_video.html:175
+msgid "Destaques"
+msgstr "Highlights"
+
+#: video/templates/galeria.html:248
+msgid "Declaração de Conformidade 18 U.S.C. §2257"
+msgstr "18 U.S.C. §2257 Compliance Statement"
+
+#: video/templates/galeria.html:250
+msgid ""
+"Todos os modelos, atores, atrizes e outras pessoas que aparecem em qualquer "
+"conteúdo sexual explícito neste site tinham mais de dezoito (18) anos no "
+"momento da criação de tais conteúdos."
+msgstr ""
+"All models, actors, actresses, and other persons appearing in any sexually "
+"explicit content on this website were over eighteen (18) years of age at the "
+"time such content was created."
+
+#: video/templates/galeria.html:252
+msgid ""
+"Os registros exigidos por 18 U.S.C. §2257 e 28 C.F.R. §75 são mantidos pelo "
+"responsável pelos registros."
+msgstr ""
+"The records required by 18 U.S.C. §2257 and 28 C.F.R. §75 are kept by the "
+"custodian of records."
+
+#: video/templates/galeria.html:254
+msgid "Contato DMCA / Direitos Autorais:"
+msgstr "DMCA / Copyright Contact:"
+
+#: video/templates/search_result.html:8 video/templates/search_results.html:8
+msgid "Resultados da pesquisa"
+msgstr "Search results"
+
+#: video/templates/search_result.html:25 video/templates/search_results.html:28
+msgid "Resultados para"
+msgstr "Results for"
+
+#: video/templates/search_result.html:28 video/templates/search_results.html:31
+msgid "Categorias relacionadas:"
+msgstr "Related categories:"
+
+#: video/templates/search_result.html:37
+msgid "Vídeos relacionados:"
+msgstr "Related videos:"
+
+#: video/templates/search_result.html:49
+msgid "Nenhum vídeo encontrado. Aqui estão alguns aleatórios:"
+msgstr "No videos found. Here are some random ones:"
+
+#: video/templates/search_results.html:40
+#, fuzzy
+#| msgid "Vídeos relacionados:"
+msgid "Vídeos encontrados:"
+msgstr "Related videos:"
+
+#: video/templates/search_results.html:78
+#, fuzzy
+#| msgid "Nenhum vídeo nesta categoria."
+msgid "Nenhum vídeo encontrado."
+msgstr "No videos in this category."
+
+#: video/templates/ver_video.html:158
+msgid "Seu navegador não suporta vídeo."
+msgstr "Your browser does not support video."
+
+#: video/templates/ver_video.html:164
+msgid "Download"
+msgstr "Download"
+
+#: video/templates/ver_video.html:169
+msgid "Voltar"
+msgstr "Back"
+
+#: video/templates/videos_categoria.html:142
+msgid "Categoria"
+msgstr "Category"
+
+#: video/templates/videos_categoria.html:153
+msgid "Nenhum vídeo nesta categoria."
+msgstr "No videos in this category."

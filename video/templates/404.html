@@ -1,0 +1,40 @@
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Página não encontrada" %}</title>
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 80px;
+            color: #e60000;
+        }
+        h2 {
+            margin-top: 20px;
+        }
+        a {
+            color: #e60000;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>404</h1>
+    <h2>{% trans "Página não encontrada!" %}</h2>
+    <p>{% trans "Ops! A página que você procura não existe." %}</p>
+    <p><a href="/">⬅ {% trans "Voltar para o início" %}</a></p>
+</body>
+</html>

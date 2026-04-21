@@ -1,0 +1,233 @@
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ video.titulo }} - XPPP</title>
+
+<meta http-equiv="Delegate-CH" content="Sec-CH-UA https://s.magsrv.com; Sec-CH-UA-Mobile https://s.magsrv.com; Sec-CH-UA-Arch https://s.magsrv.com; Sec-CH-UA-Model https://s.magsrv.com; Sec-CH-UA-Platform https://s.magsrv.com; Sec-CH-UA-Platform-Version https://s.magsrv.com; Sec-CH-UA-Bitness https://s.magsrv.com; Sec-CH-UA-Full-Version-List https://s.magsrv.com; Sec-CH-UA-Full-Version https://s.magsrv.com;">
+
+
+<link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css"/>
+<script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
+
+<style>
+* { box-sizing: border-box; margin:0; padding:0; font-family: Arial, sans-serif; }
+
+body {
+    background: #000;
+    color: #fff;
+    padding: 0;
+}
+
+/* Header */
+header {
+    background: #0b0b0b;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #222;
+}
+
+header .logo {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+header .logo span {
+    color: #e60000;
+    font-family: Impact, Arial Black, sans-serif;
+}
+
+/* Barra de pesquisa */
+.search-box {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.search-box input {
+    width: 70%;
+    padding: 10px;
+    border-radius: 8px 0 0 8px;
+    border: none;
+    outline: none;
+    background: #111;
+    color: #fff;
+}
+
+.search-box button {
+    padding: 10px 15px;
+    background: #e60000;
+    color: #fff;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+}
+
+/* Conteúdo principal */
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 0 10px;
+}
+
+h1 {
+    color: #f00;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Video player */
+video {
+    width: 100%;
+    border-radius: 8px;
+    background: #000;
+    display: block;
+    margin-bottom: 20px;
+}
+
+/* Botões */
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.actions a {
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.download {
+    background: #e60000;
+    color: #fff;
+}
+
+.voltar {
+    background: #222;
+    color: #fff;
+}
+
+.actions a:hover {
+    opacity: 0.8;
+}
+
+/* Rodapé */
+footer {
+    margin-top: 30px;
+    padding: 15px;
+    background: #0b0b0b;
+    text-align: center;
+    font-size: 14px;
+    border-top: 1px solid #222;
+}
+
+footer a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 8px;
+}
+
+footer a:hover {
+    color: #e60000;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo"><span>X</span>PPP</div>
+
+    <form class="search-box" action="/search/">
+        <input type="text" name="q" placeholder="{% trans 'Pesquisar vídeos...' %}">
+        <button>🔍</button>
+    </form>
+</header>
+
+{% include 'popunder.html' %}
+{% include 'message.html' %}
+
+<div class="container">
+    <h1>{{ video.titulo }}</h1>
+
+    
+    <!-- Video player -->
+<video id="video-player" controls style="width:100%; max-width:400px; aspect-ratio:9/16; object-fit:cover; border-radius:8px; display:block; margin:0 auto 20px auto;">
+    <source src="{{ video.video.url }}" type="video/mp4">
+    {% trans "Seu navegador não suporta vídeo." %}
+</video>
+
+<script>
+fluidPlayer('video-player', {
+    layoutControls: {
+        autoPlay: false,
+        controlBar: {
+            autoHide: true
+        }
+    },
+    vastOptions: {
+        adList: [
+            {
+                roll: 'preRoll',
+                vastTag: 'https://s.magsrv.com/v1/vast.php?idzone=5868656'
+            }
+        ],
+        skipButtonCaption: 'Remove ad in  [seconds]',
+        skipButtonClickCaption: 'Remove ad',
+        skipOffset: 10
+    }
+});
+</script>
+
+
+    <div class="actions">
+        <a href="{{ video.video.url }}" class="download" id="baixar-video">{% trans "⬇️ Download" %}</a>
+
+<script>
+document.getElementById('baixar-video').addEventListener('click', async function(e) {
+    e.preventDefault();
+
+    const videoUrl = "{{ video.video.url }}";  // seu link Cloudinary
+    const fileName = "{{ video.titulo }}.mp4";
+
+    try {
+        const response = await fetch(videoUrl);
+        const blob = await response.blob();
+
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+    } catch (err) {
+        alert('Erro ao baixar o vídeo.');
+        console.error(err);
+    }
+});
+</script>
+
+        <a href="{% url 'galeria' %}" class="voltar">
+            ⬅ {% trans "Voltar" %}
+        </a>
+    </div>
+</div>
+
+<footer>
+    © 2026 XPPP | <a href="{% url 'emphasis' %}">{% trans "Destaques" %}</a>
+</footer>
+
+</body>
+</html>

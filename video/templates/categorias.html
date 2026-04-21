@@ -1,0 +1,153 @@
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% blocktrans %}Categorias | XPPP{% endblocktrans %}</title>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }                                                
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #000;
+    color: #fff;
+}
+
+/* Header */
+header {
+    background: #0b0b0b;
+    padding: 15px 10px;
+    border-bottom: 1px solid #222;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 26px;
+    margin-bottom: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* Pesquisa */
+.search-box {
+    display: flex;
+    width: 100%;
+    max-width: 500px;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 8px 0 0 8px;
+    border: none;
+    outline: none;
+    background: #111;
+    color: #fff;
+}
+
+.search-box button {
+    padding: 10px 15px;
+    border: none;
+    background: #e60000;
+    color: #fff;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.search-box button:hover {
+    background: #ff1a1a;
+}
+
+/* Grid de categorias */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+    padding: 20px;
+}
+
+.card {
+    background: #0f0f0f;
+    border-radius: 12px;
+    text-align: center;
+    padding: 15px;
+    transition: 0.3s;
+}
+
+.card a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 600;
+    display: block;
+    font-size: 16px;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    background: #1a1a1a;
+    box-shadow: 0 0 10px rgba(230, 0, 0, 0.5);
+}
+
+/* Footer */
+footer {
+    background: #0b0b0b;
+    border-top: 1px solid #222;
+    text-align: center;
+    padding: 15px;
+    font-size: 14px;
+    color: #aaa;
+}
+
+footer a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 8px;
+}
+
+footer a:hover {
+    color: #e60000;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>{% trans "Categorias" %}</h1>
+
+    <!-- Barra de pesquisa -->
+    <form method="get" action="/search/" class="search-box">
+        <input type="text" name="q" placeholder="{% trans 'Pesquisar vídeos...' %}">
+        <button>🔍</button>
+    </form>
+</header>
+
+{% include 'message.html' %}
+{% include 'sticky.html' %}
+
+<main>
+    <div class="grid">
+        {% for categoria in categorias %}
+            <div class="card">
+                <a href="{% url 'videos_categoria' categoria.slug %}">
+                    {{ categoria.nome }}
+                </a>
+            </div>
+        {% empty %}
+            <p>{% trans "Nenhuma categoria cadastrada." %}</p>
+        {% endfor %}
+    </div>
+</main>
+
+<footer>
+    <a href="/">{% trans "🏠 Home" %}</a> | 
+    <a href="/emphasis/">{% trans "⭐ Destaques" %}</a>
+</footer>
+
+</body>
+</html>

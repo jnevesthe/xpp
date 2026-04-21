@@ -1,0 +1,170 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ categoria.nome }} - XPPP</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Segoe UI, Arial, sans-serif;
+    background:#000;
+    color:#fff;
+}
+
+/* Header */
+header{
+    background:#0b0b0b;
+    padding:15px 10px;
+    border-bottom:1px solid #222;
+}
+
+/* Logo */
+.logo{
+    text-align:center;
+    font-size:28px;
+    font-weight:700;
+}
+.logo span{
+    color:#e60000;
+    font-family:'Impact','Arial Black',sans-serif;
+}
+
+/* Pesquisa */
+.search-box{
+    margin-top:12px;
+    display:flex;
+    justify-content:center;
+}
+.search-box input{
+    width:70%;
+    padding:10px;
+    border-radius:8px 0 0 8px;
+    border:none;
+    background:#111;
+    color:#fff;
+}
+.search-box button{
+    padding:10px 15px;
+    background:#e60000;
+    color:#fff;
+    border:none;
+    border-radius:0 8px 8px 0;
+}
+
+/* Título categoria */
+.cat-title{
+    text-align:center;
+    margin:15px 0 5px;
+    font-size:22px;
+}
+
+/* Galeria */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    padding:12px;
+}
+
+/* Card */
+.card{
+    background:#0f0f0f;
+    border-radius:12px;
+    overflow:hidden;
+    transition:0.25s;
+}
+
+/* Thumb */
+.thumb{
+    width:100%;
+    height:260px;
+}
+.thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* Título */
+.card p{
+    margin:0;
+    padding:8px 10px;
+    font-size:14px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+/* Hover */
+.card:hover{
+    transform:scale(1.03);
+}
+
+/* Paginação */
+.buttons{
+    text-align:center;
+    margin:20px 0;
+}
+.buttons a{
+    background:#e60000;
+    color:#fff;
+    padding:8px 18px;
+    margin:6px;
+    border-radius:6px;
+    text-decoration:none;
+}
+
+@media(min-width:800px){
+    .grid{grid-template-columns:repeat(4,1fr);}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo"><span>X</span>PPP</div>
+
+    <form class="search-box" action="/search/">
+        <input type="text" name="q" placeholder="{% trans 'Pesquisar vídeos...' %}">
+        <button>🔍</button>
+    </form>
+</header>
+
+{% include 'sticky.html' %}
+{% include 'message.html' %}
+
+<h1 class="cat-title">{% trans "Categoria" %}: {{ categoria.nome }}</h1>
+
+<div class="grid">
+    {% for v in videos %}
+        <a href="{% url 'ver_video' v.slug %}" class="card">
+            <div class="thumb">
+                <img src="{{ v.capa.url }}">
+            </div>
+            <p title="{{ v.titulo }}">{{ v.titulo }}</p>
+        </a>
+    {% empty %}
+        <p style="text-align:center;width:100%">{% trans "Nenhum vídeo nesta categoria." %}</p>
+    {% endfor %}
+</div>
+
+<div class="buttons">
+    {% if videos.has_previous %}
+        <a href="?page={{ videos.previous_page_number }}">⬅ {% trans "Anterior" %}</a>
+    {% endif %}
+
+    {{ videos.number }} / {{ videos.paginator.num_pages }}
+
+    {% if videos.has_next %}
+        <a href="?page={{ videos.next_page_number %}">{% trans "Próximo" %} ➡</a>
+    {% endif %}
+</div>
+
+</body>
+</html>

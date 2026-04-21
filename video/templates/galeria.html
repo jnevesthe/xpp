@@ -1,0 +1,257 @@
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}"
+<head>
+
+    
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Segoe UI, Arial, sans-serif;
+    background:#000;
+    color:#fff;
+}
+
+/* Header */
+header{
+    background:#0b0b0b;
+    padding:15px 10px;
+    border-bottom:1px solid #222;
+}
+
+/* Logo */
+.logo{
+    text-align:center;
+    font-size:28px;
+    font-weight:700;
+    letter-spacing:1px;
+}
+.logo span{
+    color:#e60000;
+    font-family:'Impact','Arial Black',sans-serif;
+}
+
+/* Links extras no header */
+.header-links {
+    text-align:center;
+    margin-top:8px;
+}
+.header-links a {
+    color:#fff;
+    text-decoration:none;
+    margin:0 12px;
+    font-weight:600;
+}
+.header-links a:hover {
+    color:#e60000;
+}
+
+/* Pesquisa */
+.search-box{
+    margin-top:12px;
+    display:flex;
+    justify-content:center;
+}
+.search-box input{
+    width:70%;
+    padding:10px;
+    border-radius:8px 0 0 8px;
+    border:none;
+    outline:none;
+    background:#111;
+    color:#fff;
+}
+.search-box button{
+    padding:10px 15px;
+    background:#e60000;
+    color:#fff;
+    border:none;
+    border-radius:0 8px 8px 0;
+}
+
+/* Galeria */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    padding:12px;
+}
+
+/* Card */
+.card{
+    background:#0f0f0f;
+    border-radius:12px;
+    overflow:hidden;
+    transition:0.25s;
+}
+
+/* Thumb vertical */
+.thumb{
+    width:100%;
+    height:260px;
+    overflow:hidden;
+}
+.thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* Título */
+.card p{
+    margin:0;
+    padding:8px 10px;
+    font-size:14px;
+    color:#fff;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+/* Destaque */
+.highlight{
+    border:2px solid #e60000;
+    box-shadow:0 0 12px rgba(230,0,0,.5);
+}
+
+/* Hover */
+.card:hover{
+    transform:scale(1.03);
+}
+
+/* Paginação */
+.buttons{
+    text-align:center;
+    margin:20px 0;
+}
+.buttons a{
+    background:#e60000;
+    color:#fff;
+    padding:8px 18px;
+    margin:6px;
+    border-radius:6px;
+    text-decoration:none;
+}
+
+/* Rodapé */
+footer{
+    background:#0b0b0b;
+    border-top:1px solid #222;
+    text-align:center;
+    padding:14px;
+    font-size:14px;
+    color:#aaa;
+}
+footer a{
+    color:#fff;
+    text-decoration:none;
+}
+
+/* Desktop */
+@media(min-width:800px){
+    .grid{
+        grid-template-columns:repeat(4,1fr);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo"><span>X</span>PPP</div>
+
+    <!-- Links para categorias e destaques -->
+    <div class="header-links">
+        <a href="{% url 'categorias' %}">{% trans "Categorias" %}</a> | 
+        <a href="{% url 'emphasis' %}">{% trans "Destaques" %}</a>
+    </div>
+
+    <form class="search-box" action="/search/">
+        <input type="text" name="q" placeholder="{% trans 'Pesquisar vídeos...' %}">
+        <button>🔍</button>
+    </form>
+
+    <div style="margin-top:10px; text-align:center;">
+    <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <select name="language" onchange="this.form.submit()"
+            style="padding:6px 10px;
+                   border-radius:8px;
+                   background:#111;
+                   color:#fff;
+                   border:1px solid #333;
+                   cursor:pointer;">
+            <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>🇺🇸 English</option>
+            <option value="pt" {% if LANGUAGE_CODE == 'pt' %}selected{% endif %}>🇵🇹 Português</option>
+        </select>
+    </form>
+</div>
+</header>
+
+    <div style="text-align:center; margin:20px;">
+        <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
+<ins id="1112727" data-width="300" data-height="100"></ins>
+<script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1112727});</script>
+<!--JuicyAds END-->
+    </div>
+
+
+    {% include 'popunder.html' %}
+    {% include 'message.html' %}
+    {% include 'sticky.html' %}
+
+    
+<div class="grid">
+    {% for v in page_obj %}
+        <a href="{% url 'ver_video' v.slug %}" class="card {% if v.destaque %}highlight{% endif %}">
+            <div class="thumb">
+                <img src="{{ v.capa.url }}">
+            </div>
+            <p title="{{ v.titulo }}">{{ v.titulo }}</p>
+        </a>
+    {% endfor %}
+</div>
+
+
+<div class="buttons">
+
+{% if page_obj.has_previous %}
+<a href="?page=1">« 1</a>
+<a href="?page={{ page_obj.previous_page_number }}">⬅ {% trans "Anterior" %}</a>
+{% endif %}
+
+{% for num in page_obj.paginator.page_range %}
+    {% if page_obj.number == num %}
+        <a style="background:#fff;color:#000;">{{ num }}</a>
+    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a href="?page={{ num }}">{{ num }}</a>
+    {% endif %}
+{% endfor %}
+
+{% if page_obj.has_next %}
+<a href="?page={{ page_obj.next_page_number }}">{% trans "Próximo" %} ➡</a>
+<a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }} »</a>
+{% endif %}
+
+</div>
+
+<footer>
+    <a href="/destaques/">⭐ {% trans "Destaques" %}</a> | © 2026 XPPP
+    <br><br>
+    {% trans "Declaração de Conformidade 18 U.S.C. §2257" %}
+    <br>
+    {% trans "Todos os modelos, atores, atrizes e outras pessoas que aparecem em qualquer conteúdo sexual explícito neste site tinham mais de dezoito (18) anos no momento da criação de tais conteúdos." %}
+    <br>
+    {% trans "Os registros exigidos por 18 U.S.C. §2257 e 28 C.F.R. §75 são mantidos pelo responsável pelos registros." %}
+    <br><br>
+    {% trans "Contato DMCA / Direitos Autorais:" %} <a href="mailto:dmca@seudominio.com">dmca@seudominio.com</a>
+</footer>
+
+
+</body>
+</html>

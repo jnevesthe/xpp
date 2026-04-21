@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Videoteca</title>
+    <style>
+        body { background-color: #000; color: #fff; font-family: Arial; }
+        h1, h3 { color: #f00; }
+        .video-container { margin: 20px 0; border-bottom: 1px solid #f00; padding-bottom: 20px; }
+        img.capa { cursor: pointer; max-width: 300px; border: 2px solid #f00; }
+        video { display: none; max-width: 100%; margin-top: 10px; }
+        a.download { color: #f00; text-decoration: none; margin-top: 5px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <h1>Videoteca</h1>
+
+    {% for v in videos %}
+        <div class="video-container">
+            <h3>{{ v.titulo }}</h3>
+            <p>{{ v.descricao }}</p>
+            <!-- Capa do vídeo -->
+            <img class="capa" src="{{ v.capa.url }}" alt="Capa do vídeo" onclick="playVideo(this)">
+            <!-- Player escondido -->
+            <video controls>
+                <source src="{{ v.video.url }}" type="video/mp4">
+                Seu navegador não suporta vídeo.
+            </video>
+            <br>
+            <!-- Download -->
+            <a class="download" href="{{ v.video.url }}" download>⬇️ Download</a>
+        </div>
+    {% empty %}
+        <p>Nenhum vídeo disponível.</p>
+    {% endfor %}
+
+    <script>
+        function playVideo(img) {
+            const container = img.parentElement;
+            const video = container.querySelector('video');
+            video.style.display = 'block';
+            video.play();
+            img.style.display = 'none'; // Esconde a capa
+        }
+    </script>
+</body>
+</html>
