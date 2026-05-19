@@ -1,0 +1,65 @@
+<script async src="https://a.magsrv.com/ad-provider.js"></script>
+
+<style>
+  .ads-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    margin: 10px auto;
+    padding: 0 8px;
+    overflow: hidden;
+  }
+
+  .ad-box {
+    width: 160px;
+    height: 130px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 0;
+  }
+
+  .ad-box ins {
+    width: 300px;
+    height: 250px;
+    transform: scale(0.533);
+    transform-origin: top left;
+    display: block;
+  }
+
+  @media (max-width: 700px) {
+    .ad-box {
+      width: 138px;
+      height: 115px;
+    }
+
+    .ad-box ins {
+      transform: scale(0.46);
+    }
+  }
+
+  @media (max-width: 360px) {
+    .ad-box {
+      width: 120px;
+      height: 100px;
+    }
+
+    .ad-box ins {
+      transform: scale(0.4);
+    }
+  }
+</style>
+
+<div class="ads-wrapper">
+  <div class="ad-box">
+    <ins class="eas6a97888e2" data-zoneid="5929748"></ins>
+  </div>
+  <div class="ad-box">
+    <ins class="eas6a97888e2" data-zoneid="5929746"></ins>
+  </div>
+</div>
+
+<script>
+  (AdProvider = window.AdProvider || []).push({"serve": {}});
+</script>

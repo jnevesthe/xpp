@@ -1,83 +1,415 @@
 {% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
 
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% trans "Resultados da pesquisa" %} - {{ query }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Resultados da pesquisa" %} - {{ query }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+
 <style>
-body { background:#000; color:#fff; font-family: Arial, sans-serif; margin:20px; }
-h1 { color:#f00; margin-bottom:20px; text-align:center; }
-.grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
-.card { background:#0f0f0f; border-radius:12px; overflow:hidden; transition:0.25s; }
-.card:hover { transform:scale(1.03); }
-.thumb { width:100%; height:260px; overflow:hidden; }
-.thumb img { width:100%; height:100%; object-fit:cover; }
-.card p { margin:0; padding:8px; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.buttons { text-align:center; margin:20px 0; }
-.buttons a { background:#e60000; color:#fff; padding:8px 18px; margin:6px; border-radius:6px; text-decoration:none; }
-.buttons span { color:#fff; padding:8px 12px; }
-footer { margin-top:30px; text-align:center; color:#aaa; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --red:      #e60000;
+    --red-glow: rgba(230,0,0,.4);
+    --bg:       #000;
+    --surface:  #0f0f0f;
+    --header:   #0b0b0b;
+    --border:   #222;
+    --text:     #fff;
+    --muted:    #aaa;
+}
+
+body {
+    font-family: 'Barlow', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* ── HEADER ── */
+header {
+    background: var(--header);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 16px 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.logo {
+    text-align: center;
+    font-family: 'Bebas Neue', 'Impact', sans-serif;
+    font-size: 38px;
+    letter-spacing: 3px;
+    line-height: 1;
+    text-decoration: none;
+    color: var(--text);
+    display: block;
+}
+.logo span { color: var(--red); }
+
+.header-links {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+}
+.header-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color .2s;
+}
+.header-links a:hover { color: var(--red); }
+
+.search-box {
+    display: flex;
+    justify-content: center;
+}
+.search-box input {
+    width: min(520px, 100%);
+    padding: 10px 14px;
+    border-radius: 8px 0 0 8px;
+    border: 1px solid var(--border);
+    border-right: none;
+    background: #111;
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+    transition: border-color .2s;
+}
+.search-box input:focus { border-color: var(--red); }
+.search-box button {
+    padding: 10px 18px;
+    background: var(--red);
+    color: var(--text);
+    border: none;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background .2s;
+}
+.search-box button:hover { background: #cc0000; }
+
+.lang-wrap { text-align: center; }
+.lang-wrap select {
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: #111;
+    color: var(--text);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 13px;
+}
+
+/* ── MAIN ── */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 12px;
+}
+
+/* ── PAGE TITLE ── */
+.page-title {
+    font-family: 'Bebas Neue', 'Impact', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--text);
+    padding: 24px 0 8px;
+    text-align: center;
+}
+.page-title span { color: var(--red); }
+
+/* ── CATEGORIES ── */
+.section-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin: 20px 0 10px;
+}
+.cat-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+    list-style: none;
+}
+.cat-list a {
+    background: #1a1a1a;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background .2s, border-color .2s;
+}
+.cat-list a:hover {
+    background: var(--red);
+    border-color: var(--red);
+}
+
+/* ── GRID ── */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 20px 0;
+}
+
+/* ── CARD ── */
+.card {
+    background: var(--surface);
+    border-radius: 10px;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    transition: transform .25s, box-shadow .25s;
+    border: 1px solid transparent;
+}
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0,0,0,.6);
+    border-color: #333;
+}
+
+/* Thumbnail VERTICAL 9/16 */
+.thumb {
+    width: 100%;
+    aspect-ratio: 9/16;
+    overflow: hidden;
+    position: relative;
+    background: #111;
+}
+.thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform .35s;
+}
+.card:hover .thumb img { transform: scale(1.06); }
+
+/* Play overlay */
+.thumb::after {
+    content: '▶';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: rgba(255,255,255,.85);
+    background: rgba(0,0,0,.35);
+    opacity: 0;
+    transition: opacity .25s;
+}
+.card:hover .thumb::after { opacity: 1; }
+
+.card-info {
+    padding: 10px 12px 12px;
+}
+.card-info p {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+}
+
+/* ── EMPTY STATE ── */
+.empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+}
+.empty .icon { font-size: 48px; margin-bottom: 16px; }
+.empty p { font-size: 16px; }
+
+/* ── PAGINAÇÃO ── */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 28px 12px;
+}
+.pagination a {
+    background: #1a1a1a;
+    color: var(--text);
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    transition: background .2s, border-color .2s;
+}
+.pagination a:hover {
+    background: var(--red);
+    border-color: var(--red);
+}
+.pagination a.current {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+    pointer-events: none;
+}
+
+/* ── FOOTER ── */
+footer {
+    background: var(--header);
+    border-top: 1px solid var(--border);
+    text-align: center;
+    padding: 24px 16px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.8;
+}
+footer a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color .2s;
+}
+footer a:hover { color: var(--red); }
+.footer-links {
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+.footer-legal {
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 12px;
+    color: #555;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+    .grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+}
+@media (max-width: 600px) {
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .logo { font-size: 26px; }
+    .header-links a { font-size: 12px; }
+    .card-info p { font-size: 12px; }
+    .page-title { font-size: 22px; }
+}
 </style>
 </head>
+
 <body>
+
+<header>
+    <div class="header-inner">
+        <a href="/" class="logo"><span>XX</span>PPP</a>
+
+        <div class="header-links">
+            <a href="{% url 'categorias' %}">{% trans "Categorias" %}</a>
+            <a href="{% url 'emphasis' %}">{% trans "Destaques" %}</a>
+        </div>
+
+        <form class="search-box" action="/search/">
+            <input type="text" name="q" value="{{ query }}" placeholder="{% trans 'Pesquisar vídeos...' %}">
+            <button type="submit">🔍</button>
+        </form>
+
+        <div class="lang-wrap">
+            <form action="{% url 'set_language' %}" method="post">
+                {% csrf_token %}
+                <select name="language" onchange="this.form.submit()">
+                    <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>🇺🇸 English</option>
+                    <option value="pt" {% if LANGUAGE_CODE == 'pt' %}selected{% endif %}>🇵🇹 Português</option>
+                </select>
+            </form>
+        </div>
+    </div>
+</header>
 
 {% include 'message.html' %}
 
-<h1>{% trans "Resultados para" %} "{{ query }}"</h1>
+<main>
+    <h1 class="page-title">{% trans "Resultados para" %} "<span>{{ query }}</span>"</h1>
 
-{% if categorias %}
-<h2>{% trans "Categorias relacionadas:" %}</h2>
-<ul>
-    {% for c in categorias %}
-        <li><a href="#">{{ c.nome }}</a></li>
-    {% endfor %}
-</ul>
-{% endif %}
+    {% if categorias %}
+        <p class="section-label">{% trans "Categorias relacionadas" %}</p>
+        <ul class="cat-list">
+            {% for c in categorias %}
+                <li><a href="#">{{ c.nome }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
-{% if page_obj %}
-<h2>{% trans "Vídeos relacionados:" %}</h2>
-<div class="grid">
-    {% for v in page_obj %}
-    <a href="{% url 'ver_video' v.slug %}" class="card">
-        <div class="thumb">
-            <img src="{{ v.capa.url }}">
+    {% if page_obj %}
+        <p class="section-label">{% trans "Vídeos relacionados" %}</p>
+        <div class="grid">
+            {% for v in page_obj %}
+                <a href="{% url 'ver_video' v.slug %}" class="card">
+                    <div class="thumb">
+                        <img src="{{ v.capa.url }}" alt="{{ v.titulo }}" loading="lazy">
+                    </div>
+                    <div class="card-info">
+                        <p title="{{ v.titulo }}">{{ v.titulo }}</p>
+                    </div>
+                </a>
+            {% endfor %}
         </div>
-        <p title="{{ v.titulo }}">{{ v.titulo }}</p>
-    </a>
-    {% endfor %}
-</div>
 
-<!-- Paginação -->
-<div class="buttons" style="text-align:center;margin-top:20px;">
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?q={{ query }}&page=1">« 1</a>
+                <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}">⬅ {% trans "Anterior" %}</a>
+            {% endif %}
 
-    <!-- Botão para a primeira página -->
-    {% if page_obj.has_previous %}
-        <a href="?q={{ query }}&page=1">« 1</a>
-        <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}">⬅ {% trans "Anterior" %}</a>
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <a class="current">{{ num }}</a>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a href="?q={{ query }}&page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?q={{ query }}&page={{ page_obj.next_page_number }}">{% trans "Próximo" %} ➡</a>
+                <a href="?q={{ query }}&page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }} »</a>
+            {% endif %}
+        </div>
+
+    {% else %}
+        <div class="empty">
+            <div class="icon">🔍</div>
+            <p>{% trans "Nenhum vídeo encontrado para" %} "<strong>{{ query }}</strong>".</p>
+        </div>
     {% endif %}
+</main>
 
-    <!-- Números de páginas próximos à atual -->
-    {% for num in page_obj.paginator.page_range %}
-        {% if page_obj.number == num %}
-            <span style="background:#fff;color:#000;padding:6px 12px;margin:2px;border-radius:6px;">{{ num }}</span>
-        {% elif num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
-            <a href="?q={{ query }}&page={{ num }}" style="padding:6px 12px;margin:2px;border-radius:6px;background:#e60000;color:#fff;text-decoration:none;">{{ num }}</a>
-        {% endif %}
-    {% endfor %}
+<footer>
+    <div class="footer-links">
+        <a href="/destaques/">⭐ {% trans "Destaques" %}</a> | © 2026 XPPP
+    </div>
+    <div class="footer-legal">
+        {% trans "Declaração de Conformidade 18 U.S.C. §2257" %}<br>
+        {% trans "Todos os modelos, atores, atrizes e outras pessoas que aparecem em qualquer conteúdo sexual explícito neste site tinham mais de dezoito (18) anos no momento da criação de tais conteúdos." %}<br>
+        {% trans "Os registros exigidos por 18 U.S.C. §2257 e 28 C.F.R. §75 são mantidos pelo responsável pelos registros." %}<br><br>
+        {% trans "Contato DMCA / Direitos Autorais:" %} <a href="mailto:dmca@seudominio.com">dmca@seudominio.com</a>
+    </div>
+</footer>
 
-    <!-- Botão para próxima página e última página -->
-    {% if page_obj.has_next %}
-        <a href="?q={{ query }}&page={{ page_obj.next_page_number }}">{% trans "Próximo" %} ➡</a>
-        <a href="?q={{ query }}&page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }} »</a>
-    {% endif %}
-
-</div>
-{% else %}
-<p>{% trans "Nenhum vídeo encontrado." %}</p>
-{% endif %}
-
-<footer>© 2026 XPPP</footer>
 </body>
 </html>

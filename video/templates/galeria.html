@@ -2,161 +2,279 @@
 {% get_current_language as LANGUAGE_CODE %}
 
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}"
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="6a97888e-site-verification" content="c0c4b86399f3ecae3052e9751a886315">
-    
+    {% include 'metag.html' %}
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+
 <style>
-*{box-sizing:border-box}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-body{
-    margin:0;
-    font-family:Segoe UI, Arial, sans-serif;
-    background:#000;
-    color:#fff;
+:root {
+    --red:      #e60000;
+    --red-glow: rgba(230,0,0,.4);
+    --bg:       #000;
+    --surface:  #0f0f0f;
+    --header:   #0b0b0b;
+    --border:   #222;
+    --text:     #fff;
+    --muted:    #aaa;
 }
 
-/* Header */
-header{
-    background:#0b0b0b;
-    padding:15px 10px;
-    border-bottom:1px solid #222;
+body {
+    font-family: 'Barlow', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
 }
 
-/* Logo */
-.logo{
-    text-align:center;
-    font-size:28px;
-    font-weight:700;
-    letter-spacing:1px;
+/* ── HEADER ── */
+header {
+    background: var(--header);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 16px 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
-.logo span{
-    color:#e60000;
-    font-family:'Impact','Arial Black',sans-serif;
+.header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
+.logo {
+    text-align: center;
+    font-family: 'Bebas Neue', 'Impact', sans-serif;
+    font-size: 38px;
+    letter-spacing: 3px;
+    line-height: 1;
+}
+.logo span { color: var(--red); }
 
-/* Links extras no header */
 .header-links {
-    text-align:center;
-    margin-top:8px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
 }
 .header-links a {
-    color:#fff;
-    text-decoration:none;
-    margin:0 12px;
-    font-weight:600;
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color .2s;
 }
-.header-links a:hover {
-    color:#e60000;
+.header-links a:hover { color: var(--red); }
+
+.search-box {
+    display: flex;
+    justify-content: center;
+}
+.search-box input {
+    width: min(520px, 100%);
+    padding: 10px 14px;
+    border-radius: 8px 0 0 8px;
+    border: 1px solid var(--border);
+    border-right: none;
+    background: #111;
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+    transition: border-color .2s;
+}
+.search-box input:focus { border-color: var(--red); }
+.search-box button {
+    padding: 10px 18px;
+    background: var(--red);
+    color: var(--text);
+    border: none;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background .2s;
+}
+.search-box button:hover { background: #cc0000; }
+
+.lang-wrap { text-align: center; }
+.lang-wrap select {
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: #111;
+    color: var(--text);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 13px;
 }
 
-/* Pesquisa */
-.search-box{
-    margin-top:12px;
-    display:flex;
-    justify-content:center;
-}
-.search-box input{
-    width:70%;
-    padding:10px;
-    border-radius:8px 0 0 8px;
-    border:none;
-    outline:none;
-    background:#111;
-    color:#fff;
-}
-.search-box button{
-    padding:10px 15px;
-    background:#e60000;
-    color:#fff;
-    border:none;
-    border-radius:0 8px 8px 0;
+/* ── MAIN ── */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 12px;
 }
 
-/* Galeria */
-.grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:12px;
-    padding:12px;
+/* ── GRID ── */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 20px 0;
 }
 
-/* Card */
-.card{
-    background:#0f0f0f;
-    border-radius:12px;
-    overflow:hidden;
-    transition:0.25s;
+/* ── CARD ── */
+.card {
+    background: var(--surface);
+    border-radius: 10px;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    transition: transform .25s, box-shadow .25s;
+    border: 1px solid transparent;
+}
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0,0,0,.6);
+    border-color: #333;
 }
 
-/* Thumb vertical */
-.thumb{
-    width:100%;
-    height:260px;
-    overflow:hidden;
+/* Thumbnail VERTICAL 9/16 */
+.thumb {
+    width: 100%;
+    aspect-ratio: 9/16;
+    overflow: hidden;
+    position: relative;
+    background: #111;
 }
-.thumb img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
+.thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform .35s;
 }
+.card:hover .thumb img { transform: scale(1.06); }
 
-/* Título */
-.card p{
-    margin:0;
-    padding:8px 10px;
-    font-size:14px;
-    color:#fff;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+/* Play overlay */
+.thumb::after {
+    content: '▶';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: rgba(255,255,255,.85);
+    background: rgba(0,0,0,.35);
+    opacity: 0;
+    transition: opacity .25s;
+}
+.card:hover .thumb::after { opacity: 1; }
+
+.card-info {
+    padding: 10px 12px 12px;
+}
+.card-info p {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
 }
 
 /* Destaque */
-.highlight{
-    border:2px solid #e60000;
-    box-shadow:0 0 12px rgba(230,0,0,.5);
+.highlight {
+    border-color: var(--red) !important;
+    box-shadow: 0 0 14px var(--red-glow);
+}
+.highlight .card-info p::before {
+    content: '★ ';
+    color: var(--red);
 }
 
-/* Hover */
-.card:hover{
-    transform:scale(1.03);
+/* ── PAGINAÇÃO ── */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 28px 12px;
+}
+.pagination a {
+    background: #1a1a1a;
+    color: var(--text);
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    transition: background .2s, border-color .2s;
+}
+.pagination a:hover {
+    background: var(--red);
+    border-color: var(--red);
+}
+.pagination a.current {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+    pointer-events: none;
 }
 
-/* Paginação */
-.buttons{
-    text-align:center;
-    margin:20px 0;
+/* ── FOOTER ── */
+footer {
+    background: var(--header);
+    border-top: 1px solid var(--border);
+    text-align: center;
+    padding: 24px 16px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.8;
 }
-.buttons a{
-    background:#e60000;
-    color:#fff;
-    padding:8px 18px;
-    margin:6px;
-    border-radius:6px;
-    text-decoration:none;
+footer a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color .2s;
+}
+footer a:hover { color: var(--red); }
+.footer-links {
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+.footer-legal {
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 12px;
+    color: #555;
 }
 
-/* Rodapé */
-footer{
-    background:#0b0b0b;
-    border-top:1px solid #222;
-    text-align:center;
-    padding:14px;
-    font-size:14px;
-    color:#aaa;
-}
-footer a{
-    color:#fff;
-    text-decoration:none;
-}
+/* ── RESPONSIVE ── */
 
-/* Desktop */
-@media(min-width:800px){
-    .grid{
-        grid-template-columns:repeat(4,1fr);
+/* TABLET */
+@media (max-width: 900px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
     }
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .logo { font-size: 26px; }
+    .header-links a { font-size: 12px; }
+    .card-info p { font-size: 12px; }
 }
 </style>
 </head>
@@ -164,92 +282,83 @@ footer a{
 <body>
 
 <header>
-    <div class="logo"><span>XX</span>PPP</div>
+    <div class="header-inner">
+        <div class="logo"><span>XX</span>PPP</div>
 
-    <!-- Links para categorias e destaques -->
-    <div class="header-links">
-        <a href="{% url 'categorias' %}">{% trans "Categorias" %}</a> | 
-        <a href="{% url 'emphasis' %}">{% trans "Destaques" %}</a>
+        <div class="header-links">
+            <a href="{% url 'categorias' %}">{% trans "Categorias" %}</a>
+            <a href="{% url 'emphasis' %}">{% trans "Destaques" %}</a>
+        </div>
+
+        <form class="search-box" action="/search/">
+            <input type="text" name="q" placeholder="{% trans 'Pesquisar vídeos...' %}">
+            <button type="submit">🔍</button>
+        </form>
+
+        <div class="lang-wrap">
+            <form action="{% url 'set_language' %}" method="post">
+                {% csrf_token %}
+                <select name="language" onchange="this.form.submit()">
+                    <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>🇺🇸 English</option>
+                    <option value="pt" {% if LANGUAGE_CODE == 'pt' %}selected{% endif %}>🇵🇹 Português</option>
+                </select>
+            </form>
+        </div>
     </div>
-
-    <form class="search-box" action="/search/">
-        <input type="text" name="q" placeholder="{% trans 'Pesquisar vídeos...' %}">
-        <button>🔍</button>
-    </form>
-
-    <div style="margin-top:10px; text-align:center;">
-    <form action="{% url 'set_language' %}" method="post" style="display:inline;">
-        {% csrf_token %}
-        <select name="language" onchange="this.form.submit()"
-            style="padding:6px 10px;
-                   border-radius:8px;
-                   background:#111;
-                   color:#fff;
-                   border:1px solid #333;
-                   cursor:pointer;">
-            <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>🇺🇸 English</option>
-            <option value="pt" {% if LANGUAGE_CODE == 'pt' %}selected{% endif %}>🇵🇹 Português</option>
-        </select>
-    </form>
-</div>
 </header>
 
-    
+{% include 'popunder.html' %}
+{% include 'banner.html' %}
+{% include 'sticky.html' %}
 
+<main>
+    <div class="grid">
+        {% for v in page_obj %}
+            <a href="{% url 'ver_video' v.slug %}" class="card {% if v.destaque %}highlight{% endif %}">
+                <div class="thumb">
+                    <img src="{{ v.capa.url }}" alt="{{ v.titulo }}" loading="lazy">
+                </div>
+                <div class="card-info">
+                    <p title="{{ v.titulo }}">{{ v.titulo }}</p>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
 
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">« 1</a>
+            <a href="?page={{ page_obj.previous_page_number }}">⬅ {% trans "Anterior" %}</a>
+        {% endif %}
 
-    {% include 'popunder.html' %}
-    {% include 'message.html' %}
-    {% include 'banner.html' %}
-    {% include 'sticky.html' %}
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <a class="current">{{ num }}</a>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
 
-    
-<div class="grid">
-    {% for v in page_obj %}
-        <a href="{% url 'ver_video' v.slug %}" class="card {% if v.destaque %}highlight{% endif %}">
-            <div class="thumb">
-                <img src="{{ v.capa.url }}">
-            </div>
-            <p title="{{ v.titulo }}">{{ v.titulo }}</p>
-        </a>
-    {% endfor %}
-</div>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">{% trans "Próximo" %} ➡</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }} »</a>
+        {% endif %}
+    </div>
 
-
-<div class="buttons">
-
-{% if page_obj.has_previous %}
-<a href="?page=1">« 1</a>
-<a href="?page={{ page_obj.previous_page_number }}">⬅ {% trans "Anterior" %}</a>
-{% endif %}
-
-{% for num in page_obj.paginator.page_range %}
-    {% if page_obj.number == num %}
-        <a style="background:#fff;color:#000;">{{ num }}</a>
-    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-        <a href="?page={{ num }}">{{ num }}</a>
-    {% endif %}
-{% endfor %}
-
-{% if page_obj.has_next %}
-<a href="?page={{ page_obj.next_page_number }}">{% trans "Próximo" %} ➡</a>
-<a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }} »</a>
-{% endif %}
-
-</div>
+    {% include 'banner_end.html' %}
+</main>
 
 <footer>
-    <a href="/destaques/">⭐ {% trans "Destaques" %}</a> | © 2026 XPPP
-    <br><br>
-    {% trans "Declaração de Conformidade 18 U.S.C. §2257" %}
-    <br>
-    {% trans "Todos os modelos, atores, atrizes e outras pessoas que aparecem em qualquer conteúdo sexual explícito neste site tinham mais de dezoito (18) anos no momento da criação de tais conteúdos." %}
-    <br>
-    {% trans "Os registros exigidos por 18 U.S.C. §2257 e 28 C.F.R. §75 são mantidos pelo responsável pelos registros." %}
-    <br><br>
-    {% trans "Contato DMCA / Direitos Autorais:" %} <a href="mailto:dmca@seudominio.com">dmca@seudominio.com</a>
+    <div class="footer-links">
+        <a href="/destaques/">⭐ {% trans "Destaques" %}</a> | © 2026 XPPP
+    </div>
+    <div class="footer-legal">
+        {% trans "Declaração de Conformidade 18 U.S.C. §2257" %}<br>
+        {% trans "Todos os modelos, atores, atrizes e outras pessoas que aparecem em qualquer conteúdo sexual explícito neste site tinham mais de dezoito (18) anos no momento da criação de tais conteúdos." %}<br>
+        {% trans "Os registros exigidos por 18 U.S.C. §2257 e 28 C.F.R. §75 são mantidos pelo responsável pelos registros." %}<br><br>
+        {% trans "Contato DMCA / Direitos Autorais:" %} <a href="mailto:dmca@seudominio.com">dmca@seudominio.com</a>
+    </div>
 </footer>
-
 
 </body>
 </html>
