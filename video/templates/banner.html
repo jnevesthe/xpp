@@ -11,8 +11,8 @@
   }
 
   .ad-box {
-    width: 160px;
-    height: 130px;
+    width: 82px;
+    height: 68px;
     flex-shrink: 0;
     overflow: hidden;
     border-radius: 0;
@@ -21,35 +21,35 @@
   .ad-box ins {
     width: 300px;
     height: 250px;
-    transform: scale(0.533);
+    transform: scale(0.273);
     transform-origin: top left;
     display: block;
   }
 
   @media (max-width: 700px) {
     .ad-box {
-      width: 138px;
-      height: 115px;
+      width: 72px;
+      height: 60px;
     }
 
     .ad-box ins {
-      transform: scale(0.46);
+      transform: scale(0.24);
     }
   }
 
   @media (max-width: 360px) {
     .ad-box {
-      width: 120px;
-      height: 100px;
+      width: 64px;
+      height: 53px;
     }
 
     .ad-box ins {
-      transform: scale(0.4);
+      transform: scale(0.213);
     }
   }
 </style>
 
-<div class="ads-wrapper">
+<div class="ads-wrapper" id="ads-lazy-wrapper">
   <div class="ad-box">
     <ins class="eas6a97888e2" data-zoneid="5929748"></ins>
   </div>
@@ -59,13 +59,11 @@
   <div class="ad-box">
     <!-- JuicyAds v3.0 -->
     <ins id="1122016" data-width="468" data-height="60"></ins>
-    <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1122016});</script>
     <!--JuicyAds END-->
   </div>
   <div class="ad-box">
     <!-- JuicyAds v3.0 -->
     <ins id="1122015" data-width="468" data-height="60"></ins>
-    <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1122015});</script>
     <!--JuicyAds END-->
   </div>
   <div class="ad-box">
@@ -82,11 +80,40 @@
   </div>
 </div>
 
-<script async src="https://a.magsrv.com/ad-provider.js"></script>
-<script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
-
-<center>
 <script>
-  (AdProvider = window.AdProvider || []).push({"serve": {}});
+  // Só carrega os scripts de anúncios quando a secção entra no ecrã (lazy load)
+  function loadAdScripts() {
+    var s1 = document.createElement('script');
+    s1.src = 'https://a.magsrv.com/ad-provider.js';
+    s1.async = true;
+    s1.onload = function () {
+      (window.AdProvider = window.AdProvider || []).push({"serve": {}});
+    };
+    document.body.appendChild(s1);
+
+    var s2 = document.createElement('script');
+    s2.src = 'https://poweredby.jads.co/js/jads.js';
+    s2.async = true;
+    s2.setAttribute('data-cfasync', 'false');
+    s2.onload = function () {
+      (window.adsbyjuicy = window.adsbyjuicy || []).push({'adzone': 1122016});
+      (window.adsbyjuicy = window.adsbyjuicy || []).push({'adzone': 1122015});
+    };
+    document.body.appendChild(s2);
+  }
+
+  var adsWrapper = document.getElementById('ads-lazy-wrapper');
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          loadAdScripts();
+          obs.disconnect();
+        }
+      });
+    }, { rootMargin: '200px' });
+    observer.observe(adsWrapper);
+  } else {
+    loadAdScripts();
+  }
 </script>
-  </center>
