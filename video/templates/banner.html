@@ -49,7 +49,7 @@
   }
 </style>
 
-<div class="ads-wrapper" id="ads-lazy-wrapper">
+<div class="ads-wrapper">
   <div class="ad-box">
     <ins class="eas6a97888e2" data-zoneid="5929748"></ins>
   </div>
@@ -57,14 +57,10 @@
     <ins class="eas6a97888e2" data-zoneid="5929746"></ins>
   </div>
   <div class="ad-box">
-    <!-- JuicyAds v3.0 -->
-    <ins id="1122016" data-width="468" data-height="60"></ins>
-    <!--JuicyAds END-->
+    <ins class="eas6a97888e2" data-zoneid="5972286"></ins>
   </div>
   <div class="ad-box">
-    <!-- JuicyAds v3.0 -->
-    <ins id="1122015" data-width="468" data-height="60"></ins>
-    <!--JuicyAds END-->
+    <ins class="eas6a97888e2" data-zoneid="5972284"></ins>
   </div>
   <div class="ad-box">
     <ins class="eas6a97888e2" data-zoneid="5972266"></ins>
@@ -80,40 +76,10 @@
   </div>
 </div>
 
+<script async src="https://a.magsrv.com/ad-provider.js"></script>
+
+<center>
 <script>
-  // Só carrega os scripts de anúncios quando a secção entra no ecrã (lazy load)
-  function loadAdScripts() {
-    var s1 = document.createElement('script');
-    s1.src = 'https://a.magsrv.com/ad-provider.js';
-    s1.async = true;
-    s1.onload = function () {
-      (window.AdProvider = window.AdProvider || []).push({"serve": {}});
-    };
-    document.body.appendChild(s1);
-
-    var s2 = document.createElement('script');
-    s2.src = 'https://poweredby.jads.co/js/jads.js';
-    s2.async = true;
-    s2.setAttribute('data-cfasync', 'false');
-    s2.onload = function () {
-      (window.adsbyjuicy = window.adsbyjuicy || []).push({'adzone': 1122016});
-      (window.adsbyjuicy = window.adsbyjuicy || []).push({'adzone': 1122015});
-    };
-    document.body.appendChild(s2);
-  }
-
-  var adsWrapper = document.getElementById('ads-lazy-wrapper');
-  if ('IntersectionObserver' in window) {
-    var observer = new IntersectionObserver(function (entries, obs) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          loadAdScripts();
-          obs.disconnect();
-        }
-      });
-    }, { rootMargin: '200px' });
-    observer.observe(adsWrapper);
-  } else {
-    loadAdScripts();
-  }
+  (AdProvider = window.AdProvider || []).push({"serve": {}});
 </script>
+</center>
