@@ -1,5 +1,4 @@
-def lastmod(self, obj):
-    return obj.criado_emfrom django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from .models import Categoria, Video
 
