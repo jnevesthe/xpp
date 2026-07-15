@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404
+def lastmod(self, obj):
+    return obj.criado_emfrom django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from .models import Categoria, Video
 
@@ -141,7 +142,7 @@ class VideoSitemap(Sitemap):
         return Video.objects.all()
 
     def lastmod(self, obj):
-        return obj.updated_at  # ou obj.created_at
+        return obj.created_at
 
     def location(self, obj):
         return reverse("ver_video", args=[obj.slug])
