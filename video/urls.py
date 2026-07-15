@@ -10,7 +10,7 @@ from . import views
 
 
 from django.contrib.sitemaps.views import sitemap
-from galeria.sitemaps import (
+from video.sitemaps import (
     StaticViewSitemap,
     VideoSitemap,
     CategoriaSitemap,
