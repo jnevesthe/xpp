@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'modeltranslation',
     'video.apps.VideoConfig',
+    'django.contrib.sitemaps',
 ]
 
 MIDDLEWARE = [
