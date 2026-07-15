@@ -8,6 +8,22 @@ from . import views
 from django.urls import path
 from . import views
 
+
+from django.contrib.sitemaps.views import sitemap
+from galeria.sitemaps import (
+    StaticViewSitemap,
+    VideoSitemap,
+    CategoriaSitemap,
+)
+
+sitemaps = {
+    "static": StaticViewSitemap,
+    "videos": VideoSitemap,
+    "categorias": CategoriaSitemap,
+}
+
+
+
 urlpatterns = [
     path('', views.galeria, name='galeria'),
     path('video/<slug:slug>/', views.video, name='ver_video'),
@@ -15,6 +31,12 @@ urlpatterns = [
     path('emphasis/', views.destaques, name='emphasis'),
     path('categorias/', views.lista_categorias, name='categorias'),
     path('categoria/<slug:slug>/', views.videos_por_categoria, name='videos_categoria'),
+    path(
+        "sitemap.xml/",
+        sitemap,
+        {"sitemaps": sitemaps},
+        name="django.contrib.sitemaps.views.sitemap",
+    ),
 ]
 
 # Serve arquivos estáticos e mídia no DEBUG (Termux)
