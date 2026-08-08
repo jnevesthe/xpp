@@ -7,16 +7,98 @@
     <script async="" src="https://ss.mrmnd.com/popunder.js" data-mndpopid="0292c2a9-475a-4606-8998-ba9c74a171ad"></script>
 
     <script async src="https://ss.mrmnd.com/dynamic.js" data-mnddynid="87271437-7142-4f24-8504-95e056ce2d6b"></script>
-    
 
-    
-    
-    
+
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
     {% include 'metag.html' %}
+
+    {# ============ SEO ============ #}
+    {% if page_obj.number > 1 %}
+    <title>{% blocktrans %}Vídeos{% endblocktrans %} - {% trans "Página" %} {{ page_obj.number }} | XPPP</title>
+    {% else %}
+    <title>{% trans "XPPP - Vídeos Grátis Online" %}</title>
+    {% endif %}
+
+    <meta name="description" content="{% trans 'Assista aos melhores vídeos grátis em XPPP. Novos vídeos adicionados regularmente, categorias variadas, streaming rápido.' %}">
+    <meta name="keywords" content="videos gratis, XPPP, streaming, categorias, video porno">
+
+    {% if page_obj.number > 1 %}
+    <meta name="robots" content="noindex, follow">
+    {% else %}
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    {% endif %}
+
+    <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}{% if page_obj.number > 1 %}?page={{ page_obj.number }}{% endif %}">
+
+    {# ============ Paginação: rel prev/next ============ #}
+    {% if page_obj.has_previous %}
+    <link rel="prev" href="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}?page={{ page_obj.previous_page_number }}">
+    {% endif %}
+    {% if page_obj.has_next %}
+    <link rel="next" href="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}?page={{ page_obj.next_page_number }}">
+    {% endif %}
+
+    {# ============ Hreflang (site PT/EN) ============ #}
+    <link rel="alternate" hreflang="pt" href="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}?lang=pt">
+    <link rel="alternate" hreflang="en" href="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}?lang=en">
+    <link rel="alternate" hreflang="x-default" href="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}">
+
+    {# ============ Open Graph ============ #}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{% trans 'XPPP - Vídeos Grátis Online' %}">
+    <meta property="og:description" content="{% trans 'Assista aos melhores vídeos grátis em XPPP. Novos vídeos adicionados regularmente.' %}">
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}">
+    <meta property="og:site_name" content="XPPP">
+    {% if LANGUAGE_CODE == 'en' %}
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="pt_PT">
+    {% else %}
+    <meta property="og:locale" content="pt_PT">
+    <meta property="og:locale:alternate" content="en_US">
+    {% endif %}
+
+    {# ============ Twitter Card ============ #}
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{% trans 'XPPP - Vídeos Grátis Online' %}">
+    <meta name="twitter:description" content="{% trans 'Assista aos melhores vídeos grátis em XPPP.' %}">
+
+    {# ============ JSON-LD: WebSite + SearchAction ============ #}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "XPPP",
+      "url": "{{ request.scheme }}://{{ request.get_host }}/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "{{ request.scheme }}://{{ request.get_host }}{% url 'search' %}?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    {# ============ JSON-LD: ItemList (vídeos desta página) ============ #}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "itemListElement": [
+        {% for v in page_obj %}
+        {
+          "@type": "ListItem",
+          "position": {{ forloop.counter }},
+          "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'ver_video' v.slug %}",
+          "name": "{{ v.titulo|escapejs }}"
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }
+    </script>
+    {# ============ FIM SEO ============ #}
 
     <link rel="preconnect" href="https://nap5k.com">
     <link rel="preconnect" href="https://al5sm.com">
@@ -384,5 +466,5 @@ footer a:hover { color: var(--red); }
 </footer>
 
 </body>
-                                                                    </html>
-                                                                    
+                        </html>
+    
