@@ -1,4 +1,3 @@
-
 {% load i18n %}
 {% get_current_language as LANGUAGE_CODE %}
 
@@ -7,13 +6,85 @@
 <head>
     <script async="" src="https://ss.mrmnd.com/popunder.js" data-mndpopid="0292c2a9-475a-4606-8998-ba9c74a171ad"></script>
     <script async src="https://ss.mrmnd.com/dynamic.js" data-mnddynid="87271437-7142-4f24-8504-95e056ce2d6b"></script>
-    
-    
+
+
     <script async src="https://ss.mrmnd.com/banner.js"></script>
-    
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {# ============ SEO ============ #}
     <title>{{ video.titulo }} - XPPP</title>
+    <meta name="description" content="{% if video.descricao %}{{ video.descricao|striptags|truncatechars:160 }}{% else %}Assista {{ video.titulo }} grátis em XPPP. {{ video.categoria.nome }}.{% endif %}">
+    <meta name="keywords" content="{{ video.titulo }}, {{ video.categoria.nome }}, video porno, XPPP">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'ver_video' video.slug %}">
+
+    {# ============ Open Graph ============ #}
+    <meta property="og:type" content="video.other">
+    <meta property="og:title" content="{{ video.titulo }} - XPPP">
+    <meta property="og:description" content="{% if video.descricao %}{{ video.descricao|striptags|truncatechars:160 }}{% else %}Assista {{ video.titulo }} grátis em XPPP.{% endif %}">
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{% url 'ver_video' video.slug %}">
+    {% if video.capa %}
+    <meta property="og:image" content="{{ video.capa.url }}">
+    <meta property="og:image:width" content="1280">
+    <meta property="og:image:height" content="720">
+    {% endif %}
+    <meta property="og:site_name" content="XPPP">
+    <meta property="og:locale" content="pt_PT">
+
+    {# ============ Twitter Card ============ #}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ video.titulo }} - XPPP">
+    <meta name="twitter:description" content="{% if video.descricao %}{{ video.descricao|striptags|truncatechars:160 }}{% else %}Assista {{ video.titulo }} grátis em XPPP.{% endif %}">
+    {% if video.capa %}
+    <meta name="twitter:image" content="{{ video.capa.url }}">
+    {% endif %}
+
+    {# ============ JSON-LD Structured Data ============ #}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      "name": "{{ video.titulo|escapejs }}",
+      "description": "{% if video.descricao %}{{ video.descricao|escapejs|truncatechars:200 }}{% else %}{{ video.titulo|escapejs }} - {{ video.categoria.nome|escapejs }}{% endif %}",
+      {% if video.capa %}"thumbnailUrl": ["{{ video.capa.url }}"],{% endif %}
+      "uploadDate": "{{ video.criado_em|date:'c' }}",
+      "contentUrl": "{{ video.video.url }}",
+      "embedUrl": "{{ request.scheme }}://{{ request.get_host }}{% url 'ver_video' video.slug %}",
+      "isFamilyFriendly": false,
+      "genre": "{{ video.categoria.nome|escapejs }}"
+    }
+    </script>
+
+    {# ============ Breadcrumb JSON-LD ============ #}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Início",
+          "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "{{ video.categoria.nome|escapejs }}",
+          "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'videos_categoria' video.categoria.slug %}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "{{ video.titulo|escapejs }}",
+          "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'ver_video' video.slug %}"
+        }
+      ]
+    }
+    </script>
+    {# ============ FIM SEO ============ #}
 
     <meta http-equiv="Delegate-CH" content="Sec-CH-UA https://s.magsrv.com; Sec-CH-UA-Mobile https://s.magsrv.com; Sec-CH-UA-Arch https://s.magsrv.com; Sec-CH-UA-Model https://s.magsrv.com; Sec-CH-UA-Platform https://s.magsrv.com; Sec-CH-UA-Platform-Version https://s.magsrv.com; Sec-CH-UA-Bitness https://s.magsrv.com; Sec-CH-UA-Full-Version-List https://s.magsrv.com; Sec-CH-UA-Full-Version https://s.magsrv.com;">
 
@@ -272,4 +343,5 @@ document.getElementById('baixar-video').addEventListener('click', async function
 </footer>
 
 </body>
-</html>
+	</html>
+	
