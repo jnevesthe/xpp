@@ -26,6 +26,7 @@ sitemaps = {
 
 urlpatterns = [
     path('', views.galeria, name='galeria'),
+    path('video/<slug:slug>/curtir/', views.curtir_video, name='curtir_video'),
     path('video/<slug:slug>/', views.video, name='ver_video'),
     path('search/', views.search, name='search'),
     path('emphasis/', views.destaques, name='emphasis'),

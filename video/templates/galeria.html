@@ -1,58 +1,62 @@
-{% load i18n %}
-{% get_current_language as LANGUAGE_CODE %}
-
-<!DOCTYPE html>
+{% load i18n static %}{% get_current_language as LANGUAGE_CODE %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
-    <meta name="google-site-verification" content="4CMi_Se47eXOk43rGtsQRnnhlTNNiPNegCnbnM4_SIU" />
-    <script async="" src="https://ss.mrmnd.com/popunder.js" data-mndpopid="0292c2a9-475a-4606-8998-ba9c74a171ad"></script>
-
-    <script async src="https://ss.mrmnd.com/dynamic.js" data-mnddynid="87271437-7142-4f24-8504-95e056ce2d6b"></script>
-
-     <meta name="rating" content="adult">
-
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <meta name="google-site-verification" content="4CMi_Se47eXOk43rGtsQRnnhlTNNiPNegCnbnM4_SIU" />
 
+    <script async="" src="https://ss.mrmnd.com/popunder.js" data-mndpopid="0292c2a9-475a-4606-8998-ba9c74a171ad"></script>
+    <script async src="https://ss.mrmnd.com/dynamic.js" data-mnddynid="87271437-7142-4f24-8504-95e056ce2d6b"></script>
+
+    {# Rótulos de conteúdo adulto (filtros parentais) #}
+    <meta name="rating" content="adult">
+    <meta name="RATING" content="RTA-5042-1996-1400-1577-RTA">
+
+    {# ATENÇÃO: confira se o metag.html não repete title, description, robots ou canonical #}
     {% include 'metag.html' %}
 
+    {# ============ Ícones (static/x.png) ============ #}
+    <link rel="icon" type="image/png" href="{% static 'x.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'x.png' %}">
+
     {# ============ SEO ============ #}
+    {% trans "XPPP - Vídeos Grátis Online" as titulo_site %}
+    {% trans 'Assista aos melhores vídeos grátis em XPPP. Novos vídeos adicionados regularmente, categorias variadas, streaming rápido.' as desc_site %}
+
     {% if page_obj.number > 1 %}
-    <title>{% blocktrans %}Vídeos{% endblocktrans %} - {% trans "Página" %} {{ page_obj.number }} | XPPP</title>
+    <title>{% trans "Vídeos" %} - {% trans "Página" %} {{ page_obj.number }} | XPPP</title>
+    <meta name="description" content="{{ desc_site }} ({% trans 'Página' %} {{ page_obj.number }})">
     {% else %}
-    <title>{% trans "XPPP - Vídeos Grátis Online" %}</title>
+    <title>{{ titulo_site }}</title>
+    <meta name="description" content="{{ desc_site }}">
     {% endif %}
 
-    <meta name="description" content="{% trans 'Assista aos melhores vídeos grátis em XPPP. Novos vídeos adicionados regularmente, categorias variadas, streaming rápido.' %}">
-    <meta name="keywords" content="videos gratis, XPPP, streaming, categorias, video porno">
-
-    {% if page_obj.number > 1 %}
-    <meta name="robots" content="noindex, follow">
-    {% else %}
+    {# Páginas paginadas ficam indexáveis (canonical para si mesmas), senão os vídeos mais antigos deixam de ser rastreados #}
     <meta name="robots" content="index, follow, max-image-preview:large">
-    {% endif %}
 
     <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}{% if page_obj.number > 1 %}?page={{ page_obj.number }}{% endif %}">
 
-    {# ============ Paginação: rel prev/next ============ #}
+    {# ============ Paginação: rel prev/next (Bing usa; Google ignora) ============ #}
     {% if page_obj.has_previous %}
-    <link rel="prev" href="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}?page={{ page_obj.previous_page_number }}">
+    <link rel="prev" href="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}{% if page_obj.previous_page_number > 1 %}?page={{ page_obj.previous_page_number }}{% endif %}">
     {% endif %}
     {% if page_obj.has_next %}
     <link rel="next" href="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}?page={{ page_obj.next_page_number }}">
     {% endif %}
 
     {# ============ Hreflang (site PT/EN) ============ #}
-    <link rel="alternate" hreflang="pt" href="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}?lang=pt">
-    <link rel="alternate" hreflang="en" href="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}?lang=en">
-    <link rel="alternate" hreflang="x-default" href="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}">
+    {% language 'pt' %}<link rel="alternate" hreflang="pt" href="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}">{% endlanguage %}
+    {% language 'en' %}<link rel="alternate" hreflang="en" href="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}">{% endlanguage %}
+    {% language 'pt' %}<link rel="alternate" hreflang="x-default" href="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}">{% endlanguage %}
 
     {# ============ Open Graph ============ #}
     <meta property="og:type" content="website">
-    <meta property="og:title" content="{% trans 'XPPP - Vídeos Grátis Online' %}">
-    <meta property="og:description" content="{% trans 'Assista aos melhores vídeos grátis em XPPP. Novos vídeos adicionados regularmente.' %}">
-    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}">
+    <meta property="og:title" content="{{ titulo_site }}">
+    <meta property="og:description" content="{{ desc_site }}">
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}{% if page_obj.number > 1 %}?page={{ page_obj.number }}{% endif %}">
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'x.png' %}">
+    <meta property="og:image:alt" content="XPPP">
     <meta property="og:site_name" content="XPPP">
     {% if LANGUAGE_CODE == 'en' %}
     <meta property="og:locale" content="en_US">
@@ -64,8 +68,9 @@
 
     {# ============ Twitter Card ============ #}
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="{% trans 'XPPP - Vídeos Grátis Online' %}">
-    <meta name="twitter:description" content="{% trans 'Assista aos melhores vídeos grátis em XPPP.' %}">
+    <meta name="twitter:title" content="{{ titulo_site }}">
+    <meta name="twitter:description" content="{{ desc_site }}">
+    <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'x.png' %}">
 
     {# ============ JSON-LD: WebSite + SearchAction ============ #}
     <script type="application/ld+json">
@@ -74,6 +79,8 @@
       "@type": "WebSite",
       "name": "XPPP",
       "url": "{{ request.scheme }}://{{ request.get_host }}/",
+      "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'x.png' %}",
+      "inLanguage": "{{ LANGUAGE_CODE }}",
       "potentialAction": {
         "@type": "SearchAction",
         "target": "{{ request.scheme }}://{{ request.get_host }}{% url 'search' %}?q={search_term_string}",
@@ -91,7 +98,7 @@
         {% for v in page_obj %}
         {
           "@type": "ListItem",
-          "position": {{ forloop.counter }},
+          "position": {{ page_obj.start_index|add:forloop.counter0 }},
           "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'ver_video' v.slug %}",
           "name": "{{ v.titulo|escapejs }}"
         }{% if not forloop.last %},{% endif %}
@@ -109,7 +116,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
 
     <script>(function(s){s.dataset.zone='11035328',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-    <script>(function(s){s.dataset.zone='11035320',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
     <script>(function(s){s.dataset.zone='11035320',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -148,6 +154,9 @@ header {
     gap: 12px;
 }
 .logo {
+    display: block;
+    text-decoration: none;
+    color: var(--text);
     text-align: center;
     font-family: 'Bebas Neue', 'Impact', sans-serif;
     font-size: 38px;
@@ -217,6 +226,15 @@ main {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 12px;
+}
+
+.page-title {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 22px;
+    letter-spacing: 1.5px;
+    font-weight: 400;
+    text-align: center;
+    padding-top: 18px;
 }
 
 /* ── GRID ── */
@@ -374,6 +392,7 @@ footer a:hover { color: var(--red); }
         gap: 10px;
     }
     .logo { font-size: 26px; }
+    .page-title { font-size: 18px; }
     .header-links a { font-size: 12px; }
     .card-info p { font-size: 12px; }
 }
@@ -386,26 +405,26 @@ footer a:hover { color: var(--red); }
         zoneId: 'hiutjodsyz',
     });
     </script>
-    
+
 
 <header>
     <div class="header-inner">
-        <div class="logo"><span>XX</span>PPP</div>
+        <a href="{% url 'galeria' %}" class="logo" aria-label="XPPP"><span>XX</span>PPP</a>
 
-        <div class="header-links">
+        <nav class="header-links" aria-label="{% trans 'Menu principal' %}">
             <a href="{% url 'categorias' %}">{% trans "Categorias" %}</a>
             <a href="{% url 'emphasis' %}">{% trans "Destaques" %}</a>
-        </div>
+        </nav>
 
-        <form class="search-box" action="/search/">
-            <input type="text" name="q" placeholder="{% trans 'Pesquisar vídeos...' %}">
-            <button type="submit">🔍</button>
+        <form class="search-box" action="{% url 'search' %}" method="get" role="search">
+            <input type="text" name="q" placeholder="{% trans 'Pesquisar vídeos...' %}" aria-label="{% trans 'Pesquisar vídeos...' %}">
+            <button type="submit" aria-label="{% trans 'Pesquisar' %}">🔍</button>
         </form>
 
         <div class="lang-wrap">
             <form action="{% url 'set_language' %}" method="post">
                 {% csrf_token %}
-                <select name="language" onchange="this.form.submit()">
+                <select name="language" onchange="this.form.submit()" aria-label="Language">
                     <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>🇺🇸 English</option>
                     <option value="pt" {% if LANGUAGE_CODE == 'pt' %}selected{% endif %}>🇵🇹 Português</option>
                 </select>
@@ -418,6 +437,8 @@ footer a:hover { color: var(--red); }
 
 
 <main>
+    <h1 class="page-title">{% trans "Vídeos Grátis Online" %}{% if page_obj.number > 1 %} - {% trans "Página" %} {{ page_obj.number }}{% endif %}</h1>
+
     <div class="grid">
         {% for v in page_obj %}
             <a href="{% url 'ver_video' v.slug %}" class="card {% if v.destaque %}highlight{% endif %}">
@@ -431,25 +452,25 @@ footer a:hover { color: var(--red); }
         {% endfor %}
     </div>
 
-    <div class="pagination">
+    <nav class="pagination" aria-label="{% trans 'Paginação' %}">
         {% if page_obj.has_previous %}
             <a href="?page=1">« 1</a>
-            <a href="?page={{ page_obj.previous_page_number }}">⬅ {% trans "Anterior" %}</a>
+            <a href="?page={{ page_obj.previous_page_number }}" rel="prev">⬅ {% trans "Anterior" %}</a>
         {% endif %}
 
         {% for num in page_obj.paginator.page_range %}
             {% if page_obj.number == num %}
-                <a class="current">{{ num }}</a>
+                <a class="current" aria-current="page">{{ num }}</a>
             {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
                 <a href="?page={{ num }}">{{ num }}</a>
             {% endif %}
         {% endfor %}
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">{% trans "Próximo" %} ➡</a>
+            <a href="?page={{ page_obj.next_page_number }}" rel="next">{% trans "Próximo" %} ➡</a>
             <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }} »</a>
         {% endif %}
-    </div>
+    </nav>
 
     {% include 'banner_end.html' %}
 </main>
@@ -467,5 +488,4 @@ footer a:hover { color: var(--red); }
 </footer>
 
 </body>
-                        </html>
-    
+</html>

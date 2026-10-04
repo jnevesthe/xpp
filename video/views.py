@@ -1,6 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
+from django.db.models import Q, F
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+
 from .models import Categoria, Video
+
 
 # Galeria: mostra 10 miniaturas por página
 def galeria(request):
@@ -10,31 +15,53 @@ def galeria(request):
     page_obj = paginator.get_page(page_number)
     return render(request, 'galeria.html', {'page_obj': page_obj})
 
+
 # Página individual do vídeo
 def video(request, slug):
+    # Aceita o slug padrão, o PT ou o EN (os links hreflang usam slug_pt/slug_en)
+    video = get_object_or_404(
+        Video, Q(slug=slug) | Q(slug_pt=slug) | Q(slug_en=slug)
+    )
+
+    # Conta 1 visualização por sessão para cada vídeo (evita F5 inflar o número)
+    vistos = request.session.get('videos_vistos', [])
+    if video.pk not in vistos:
+        Video.objects.filter(pk=video.pk).update(visualizacoes=F('visualizacoes') + 1)
+        vistos.append(video.pk)
+        request.session['videos_vistos'] = vistos
+        video.refresh_from_db(fields=['visualizacoes'])
+
+    # Informa ao template se este visitante já curtiu
+    ja_curtiu = video.pk in request.session.get('videos_curtidos', [])
+
+    return render(request, 'ver_video.html', {
+        'video': video,
+        'ja_curtiu': ja_curtiu,
+    })
+
+
+# Like / unlike (alterna). Chamado via fetch/AJAX com POST
+@require_POST
+def curtir_video(request, slug):
     video = get_object_or_404(Video, slug=slug)
-    return render(request, 'ver_video.html', {'video': video})
 
+    curtidos = request.session.get('videos_curtidos', [])
 
-from django.db.models import Q
-import random
+    if video.pk in curtidos:
+        # Já curtiu -> remove o like
+        Video.objects.filter(pk=video.pk, likes__gt=0).update(likes=F('likes') - 1)
+        curtidos.remove(video.pk)
+        curtiu = False
+    else:
+        Video.objects.filter(pk=video.pk).update(likes=F('likes') + 1)
+        curtidos.append(video.pk)
+        curtiu = True
 
+    request.session['videos_curtidos'] = curtidos
+    video.refresh_from_db(fields=['likes'])
 
+    return JsonResponse({'likes': video.likes, 'curtiu': curtiu})
 
-from django.db.models import Q
-from django.core.paginator import Paginator
-from django.shortcuts import render, redirect
-
-from django.db.models import Q
-from django.core.paginator import Paginator
-from django.shortcuts import render, redirect
-
-
-
-
-from django.db.models import Q
-from django.core.paginator import Paginator
-from django.shortcuts import render, redirect
 
 def search(request):
     query = request.GET.get('q', '').strip()
@@ -88,9 +115,6 @@ def destaques(request):
     return render(request, 'destaques.html', context)
 
 
-
-
-
 def lista_categorias(request):
     categorias = Categoria.objects.all()
     return render(request, 'categorias.html', {
@@ -110,5 +134,3 @@ def videos_por_categoria(request, slug):
         'categoria': categoria,
         'videos': videos
     })
-
-

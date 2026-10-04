@@ -1,13 +1,15 @@
 from django.db import models
+from django.db.models import F
 from django.utils.text import slugify
 from django.utils.translation import get_language
+
 from cloudinary.models import CloudinaryField
 
 
 class Categoria(models.Model):
     nome = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True)       # independente, sempre PT
- 
+
     def save(self, *args, **kwargs):
         # Slug independente sempre em português
         if not self.slug:
@@ -37,7 +39,10 @@ class Video(models.Model):
     destaque = models.BooleanField(default=False)
     criado_em = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True, blank=True)       # independente, sempre PT
-    
+
+    # Métricas
+    visualizacoes = models.PositiveIntegerField(default=0)
+    likes = models.PositiveIntegerField(default=0)
 
     def save(self, *args, **kwargs):
         # Slug independente sempre em português
@@ -54,6 +59,13 @@ class Video(models.Model):
             self.slug_en = slugify(titulo_en)
 
         super().save(*args, **kwargs)
+
+    def adicionar_visualizacao(self):
+        # F() evita condição de corrida entre acessos simultâneos
+        Video.objects.filter(pk=self.pk).update(visualizacoes=F('visualizacoes') + 1)
+
+    def adicionar_like(self):
+        Video.objects.filter(pk=self.pk).update(likes=F('likes') + 1)
 
     def __str__(self):
         return self.titulo

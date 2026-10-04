@@ -1,39 +1,36 @@
-{% load i18n %}
-{% get_current_language as LANGUAGE_CODE %}
-
-<!DOCTYPE html>
+{% load i18n l10n %}{% get_current_language as LANGUAGE_CODE %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
     <script async="" src="https://ss.mrmnd.com/popunder.js" data-mndpopid="0292c2a9-475a-4606-8998-ba9c74a171ad"></script>
     <script async src="https://ss.mrmnd.com/dynamic.js" data-mnddynid="87271437-7142-4f24-8504-95e056ce2d6b"></script>
-
-
     <script async src="https://ss.mrmnd.com/banner.js"></script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {# ============ SEO ============ #}
+    {% with desc=video.descricao|striptags|truncatechars:160 %}
+    {% blocktrans asvar desc_fallback with titulo=video.titulo categoria=video.categoria.nome %}Assista {{ titulo }} grátis em XPPP. {{ categoria }}.{% endblocktrans %}
+
     <title>{{ video.titulo }} - XPPP</title>
-    <meta name="description" content="{% if video.descricao %}{{ video.descricao|striptags|truncatechars:160 }}{% else %}Assista {{ video.titulo }} grátis em XPPP. {{ video.categoria.nome }}.{% endif %}">
-    <meta name="keywords" content="{{ video.titulo }}, {{ video.categoria.nome }}, video porno, XPPP">
+    <meta name="description" content="{% firstof desc desc_fallback %}">
     <meta name="robots" content="index, follow, max-image-preview:large">
-    <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'ver_video' video.slug %}">
+    {# Rótulo RTA: ajuda filtros parentais a bloquear o site para menores #}
+    <meta name="RATING" content="RTA-5042-1996-1400-1577-RTA">
+    <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
 
     {# ============ Hreflang (site PT/EN) ============ #}
-    <link rel="alternate" hreflang="pt" href="{{ request.scheme }}://{{ request.get_host }}{% url 'ver_video' video.slug_pt %}">
-    <link rel="alternate" hreflang="en" href="{{ request.scheme }}://{{ request.get_host }}{% url 'ver_video' video.slug_en %}">
-    <link rel="alternate" hreflang="x-default" href="{{ request.scheme }}://{{ request.get_host }}{% url 'ver_video' video.slug %}">
+    {% language 'pt' %}<link rel="alternate" hreflang="pt" href="{{ request.scheme }}://{{ request.get_host }}{% url 'ver_video' video.slug_pt %}">{% endlanguage %}
+    {% language 'en' %}<link rel="alternate" hreflang="en" href="{{ request.scheme }}://{{ request.get_host }}{% url 'ver_video' video.slug_en %}">{% endlanguage %}
+    {% language 'pt' %}<link rel="alternate" hreflang="x-default" href="{{ request.scheme }}://{{ request.get_host }}{% url 'ver_video' video.slug_pt %}">{% endlanguage %}
 
     {# ============ Open Graph ============ #}
     <meta property="og:type" content="video.other">
     <meta property="og:title" content="{{ video.titulo }} - XPPP">
-    <meta property="og:description" content="{% if video.descricao %}{{ video.descricao|striptags|truncatechars:160 }}{% else %}Assista {{ video.titulo }} grátis em XPPP.{% endif %}">
-    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{% url 'ver_video' video.slug %}">
+    <meta property="og:description" content="{% firstof desc desc_fallback %}">
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
     {% if video.capa %}
     <meta property="og:image" content="{{ video.capa.url }}">
-    <meta property="og:image:width" content="1280">
-    <meta property="og:image:height" content="720">
     {% endif %}
     <meta property="og:site_name" content="XPPP">
     {% if LANGUAGE_CODE == 'en' %}
@@ -47,7 +44,7 @@
     {# ============ Twitter Card ============ #}
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ video.titulo }} - XPPP">
-    <meta name="twitter:description" content="{% if video.descricao %}{{ video.descricao|striptags|truncatechars:160 }}{% else %}Assista {{ video.titulo }} grátis em XPPP.{% endif %}">
+    <meta name="twitter:description" content="{% firstof desc desc_fallback %}">
     {% if video.capa %}
     <meta name="twitter:image" content="{{ video.capa.url }}">
     {% endif %}
@@ -58,13 +55,24 @@
       "@context": "https://schema.org",
       "@type": "VideoObject",
       "name": "{{ video.titulo|escapejs }}",
-      "description": "{% if video.descricao %}{{ video.descricao|escapejs|truncatechars:200 }}{% else %}{{ video.titulo|escapejs }} - {{ video.categoria.nome|escapejs }}{% endif %}",
+      "description": "{% filter escapejs %}{% firstof desc desc_fallback %}{% endfilter %}",
       {% if video.capa %}"thumbnailUrl": ["{{ video.capa.url }}"],{% endif %}
       "uploadDate": "{{ video.criado_em|date:'c' }}",
       "contentUrl": "{{ video.video.url }}",
-      "embedUrl": "{{ request.scheme }}://{{ request.get_host }}{% url 'ver_video' video.slug %}",
       "isFamilyFriendly": false,
-      "genre": "{{ video.categoria.nome|escapejs }}"
+      "genre": "{{ video.categoria.nome|escapejs }}",
+      "interactionStatistic": [
+        {
+          "@type": "InteractionCounter",
+          "interactionType": { "@type": "WatchAction" },
+          "userInteractionCount": {{ video.visualizacoes|unlocalize }}
+        },
+        {
+          "@type": "InteractionCounter",
+          "interactionType": { "@type": "LikeAction" },
+          "userInteractionCount": {{ video.likes|unlocalize }}
+        }
+      ]
     }
     </script>
 
@@ -77,7 +85,7 @@
         {
           "@type": "ListItem",
           "position": 1,
-          "name": "Início",
+          "name": "{% trans 'Início' as inicio %}{{ inicio|escapejs }}",
           "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'galeria' %}"
         },
         {
@@ -90,11 +98,12 @@
           "@type": "ListItem",
           "position": 3,
           "name": "{{ video.titulo|escapejs }}",
-          "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'ver_video' video.slug %}"
+          "item": "{{ request.scheme }}://{{ request.get_host }}{{ request.path }}"
         }
       ]
     }
     </script>
+    {% endwith %}
     {# ============ FIM SEO ============ #}
 
     <meta http-equiv="Delegate-CH" content="Sec-CH-UA https://s.magsrv.com; Sec-CH-UA-Mobile https://s.magsrv.com; Sec-CH-UA-Arch https://s.magsrv.com; Sec-CH-UA-Model https://s.magsrv.com; Sec-CH-UA-Platform https://s.magsrv.com; Sec-CH-UA-Platform-Version https://s.magsrv.com; Sec-CH-UA-Bitness https://s.magsrv.com; Sec-CH-UA-Full-Version-List https://s.magsrv.com; Sec-CH-UA-Full-Version https://s.magsrv.com;">
@@ -159,10 +168,18 @@ main {
     letter-spacing: 1.5px;
     color: var(--text);
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: 6px;
     line-height: 1.2;
     max-width: 480px;
     width: 100%;
+}
+
+/* ── STATS (visualizações) ── */
+.video-stats {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 12px;
 }
 
 /* ── PLAYER WRAPPER ── */
@@ -218,6 +235,16 @@ main {
     color: var(--text);
     border: 1px solid var(--border);
 }
+.btn-like {
+    background: #1e1e1e;
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+.btn-like.liked {
+    border-color: var(--red);
+    box-shadow: 0 0 10px var(--red-glow);
+}
+.btn-like:disabled { opacity: .6; cursor: wait; }
 
 /* ── FOOTER ── */
 footer {
@@ -265,12 +292,13 @@ footer a:hover { color: var(--red); }
     <div data-mndbanid="60906832-a770-4d58-82c2-df55c5cedfa6"></div>
  -->
     <ins data-tr-zone="01KX89KYMPBBJNXG1M2DS6A582">
-	    <script type="text/javascript" async src="https://s.ad.twinrdengine.com/adlib.js"></script>
+            <script type="text/javascript" async src="https://s.ad.twinrdengine.com/adlib.js"></script>
     </ins>
     <h1 class="video-title">{{ video.titulo }}</h1>
+    <p class="video-stats">👁 <span id="views-count">{{ video.visualizacoes }}</span> {% trans "visualizações" %}</p>
 
     <div class="player-wrapper">
-        <video id="video-player" controls>
+        <video id="video-player" controls preload="metadata"{% if video.capa %} poster="{{ video.capa.url }}"{% endif %}>
             <source src="{{ video.video.url }}" type="video/mp4">
             {% trans "Seu navegador não suporta vídeo." %}
         </video>
@@ -306,6 +334,10 @@ fluidPlayer('video-player', {
     </script>
 
     <div class="actions">
+        <button type="button" class="btn btn-like{% if ja_curtiu %} liked{% endif %}" id="btn-like">
+            <span id="like-icon">{% if ja_curtiu %}❤️{% else %}🤍{% endif %}</span>
+            <span id="like-count">{{ video.likes }}</span>
+        </button>
         <a href="{{ video.video.url }}" class="btn btn-download" id="baixar-video">
             ⬇️ {% trans "Download" %}
         </a>
@@ -318,10 +350,31 @@ fluidPlayer('video-player', {
 </main>
 
 <script>
+// ── LIKE ──
+document.getElementById('btn-like').addEventListener('click', async function () {
+    const btn = this;
+    btn.disabled = true;
+    try {
+        const response = await fetch("{% url 'curtir_video' video.slug %}", {
+            method: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+        });
+        const data = await response.json();
+        document.getElementById('like-count').textContent = data.likes;
+        document.getElementById('like-icon').textContent = data.curtiu ? '❤️' : '🤍';
+        btn.classList.toggle('liked', data.curtiu);
+    } catch (err) {
+        console.error(err);
+    } finally {
+        btn.disabled = false;
+    }
+});
+
+// ── DOWNLOAD ──
 document.getElementById('baixar-video').addEventListener('click', async function(e) {
     e.preventDefault();
     const videoUrl = "{{ video.video.url }}";
-    const fileName = "{{ video.titulo }}.mp4";
+    const fileName = "{{ video.titulo|escapejs }}.mp4";
     try {
         const response = await fetch(videoUrl);
         const blob = await response.blob();
@@ -354,5 +407,4 @@ document.getElementById('baixar-video').addEventListener('click', async function
 </footer>
 
 </body>
-	</html>
-	
+</html>
