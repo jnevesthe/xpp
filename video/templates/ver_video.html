@@ -11,6 +11,8 @@
     {# ============ SEO ============ #}
     {% with desc=video.descricao|striptags|truncatechars:160 %}
     {% blocktrans asvar desc_fallback with titulo=video.titulo categoria=video.categoria.nome %}Assista {{ titulo }} grátis em XPPP. {{ categoria }}.{% endblocktrans %}
+    
+    <center>{% include 'banner.html' %}</center>
 
     <title>{{ video.titulo }} - XPPP</title>
     <meta name="description" content="{% firstof desc desc_fallback %}">
